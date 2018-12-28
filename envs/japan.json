@@ -1,0 +1,54 @@
+{
+	"id": "4962f07e-b20c-4aa4-a6d6-ca57dbddbeb4",
+	"name": "japan",
+	"values": [
+		{
+			"key": "API_HOST",
+			"value": "api.jp-neurotrack.io",
+			"description": {
+				"content": "",
+				"type": "text/plain"
+			},
+			"enabled": true
+		},
+		{
+			"key": "AUTH_HOST",
+			"value": "auth.jp-neurotrack.io",
+			"description": {
+				"content": "",
+				"type": "text/plain"
+			},
+			"enabled": true
+		},
+		{
+			"key": "AUTH_AUDIENCE",
+			"value": "https://api.neurotrack.io",
+			"description": {
+				"content": "",
+				"type": "text/plain"
+			},
+			"enabled": true
+		},
+		{
+			"key": "AUTH_CLIENT",
+			"value": "RHNVInusFt8wTvyhQeJgJ96jTLKetC7o",
+			"description": {
+				"content": "",
+				"type": "text/plain"
+			},
+			"enabled": true
+		},
+		{
+			"key": "AUTH_SECRET",
+			"value": "nerE-V_Y1ITrvDpsgDwupJE1if0eMC29EqX01WrxrTAdmoKKwZ_XuJN9Y5U_GyVZ",
+			"description": {
+				"content": "",
+				"type": "text/plain"
+			},
+			"enabled": true
+		}
+	],
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2018-12-28T16:56:38.548Z",
+	"_postman_exported_using": "Postman/6.6.1"
+}

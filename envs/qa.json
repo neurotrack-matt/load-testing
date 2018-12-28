@@ -1,0 +1,64 @@
+{
+	"id": "7df3ac30-796d-4a10-ac4b-0403f2fb233f",
+	"name": "qa",
+	"values": [
+		{
+			"key": "API_HOST",
+			"value": "api.qa-neurotrack.io",
+			"description": {
+				"content": "",
+				"type": "text/plain"
+			},
+			"enabled": true
+		},
+		{
+			"key": "AUTH_HOST",
+			"value": "auth.qa-neurotrack.io",
+			"description": {
+				"content": "",
+				"type": "text/plain"
+			},
+			"enabled": true
+		},
+		{
+			"key": "AUTH_AUDIENCE",
+			"value": "https://api.neurotrack.io",
+			"description": {
+				"content": "",
+				"type": "text/plain"
+			},
+			"enabled": true
+		},
+		{
+			"key": "AUTH_CLIENT",
+			"value": "OG8x1r6JOPBoeHQx4S3H591vksSvf91p",
+			"description": {
+				"content": "",
+				"type": "text/plain"
+			},
+			"enabled": true
+		},
+		{
+			"key": "AUTH_SECRET",
+			"value": "j9xyptP9maC1NBmqw9J72jG4CEidnpGLitiyzfPIqZ5t_lw4OVusLdexiz5g1_67",
+			"description": {
+				"content": "",
+				"type": "text/plain"
+			},
+			"enabled": true
+		},
+		{
+			"key": "imprint_id",
+			"value": 7449,
+			"enabled": true
+		},
+		{
+			"key": "access_token",
+			"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlF6WTJRVEV3TnpFeU1EUTBRa0V3TmpBeU1UazFOME0zTVVRd05rUTBNVGxGT0VJeE5rWkVOQSJ9.eyJodHRwOi8vbmV1cm90cmFjay5jb20vb3JnYW5pemF0aW9uIjoiZGFpLWljaGkiLCJodHRwOi8vbmV1cm90cmFjay5jb20vcm9sZSI6ImN1c3RvbWVyIiwiaHR0cDovL25ldXJvdHJhY2suY29tL3V1aWQiOiI5ZjUzN2YzMC03YzBhLTQzYTctODJhNy0wMTAwNmJhNzJjZTkiLCJpc3MiOiJodHRwczovL2F1dGgucWEtbmV1cm90cmFjay5pby8iLCJzdWIiOiJhdXRoMHw5ZjUzN2YzMC03YzBhLTQzYTctODJhNy0wMTAwNmJhNzJjZTkiLCJhdWQiOiJodHRwczovL2FwaS5uZXVyb3RyYWNrLmlvIiwiaWF0IjoxNTQ1OTUyNzU5LCJleHAiOjE1NDYwMzkxNTksImF6cCI6Ikk3bWR6Z2toNlhYSHR6Y3ZBU2NLUkk2TEk5OGZwZ2dsIiwic2NvcGUiOiJ1c2VyczpyZWFkIHVzZXJzOnVwZGF0ZSB1c2VyczpjcmVhdGUiLCJndHkiOiJwYXNzd29yZCJ9.gC8gUt0Wi1sZPpRM_SKTLe22eZkgCPWefulDOztUQEbf5dvdW5FDM5kbsdMQvhzXbIIIJ3ubUE92kJM9hv67ITO1Fm_G3DcEGaDVqGEItwRFHBDJ2W-EFIIKLkhmAg5XyT8yQnSD6sIEfFT0tGAeZ8E-aXGA7C2iewfvr4vzBsKIrtaWM89jxruzCrTp3WpSlfOlAvBJDQXfzqhEQYyGOYu-OeKfUnO4ANHnMAumFtGOJMF6ubdvunHJAQXk_RcJp4xASrcTVJMRmAlQv_uC8ELtyRSWU2mKyGEvcWOjerELuc6MuqDx6PUP0kuJFe_nwIhFIIAsPeBhlLUshxCe9Q",
+			"enabled": true
+		}
+	],
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2018-12-27T23:51:37.244Z",
+	"_postman_exported_using": "Postman/6.6.1"
+}

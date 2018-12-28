@@ -1,0 +1,24 @@
+{
+  "name": "load-testing",
+  "version": "1.0.0",
+  "description": "load-testing",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "example": "node ./src/index.js --detailed true",
+    "script": "node ./src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neurotrack-matt/load-testing.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/neurotrack-matt/load-testing/issues"
+  },
+  "homepage": "https://github.com/neurotrack-matt/load-testing#readme",
+  "dependencies": {
+    "newman": "^4.3.1"
+  }
+}

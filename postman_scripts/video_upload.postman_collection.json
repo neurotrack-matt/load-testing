@@ -1,0 +1,1046 @@
+{
+	"info": {
+		"_postman_id": "45b43d66-afe7-4e54-8068-0583181643fd",
+		"name": "Testing for Testing copy",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Video 502",
+			"item": [
+				{
+					"name": "Dai-Ichi JWT Login",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "2b0347d8-90ca-4aa5-af66-5404cedaca7d",
+								"exec": [
+									"\r",
+									"pm.environment.unset('user_sub');\r",
+									"pm.environment.unset('user_uuid');\r",
+									"pm.environment.unset('auth_token');\r",
+									"\r",
+									"pm.globals.unset('jwt_password');\r",
+									"pm.globals.unset('user_email');\r",
+									"\r",
+									"/*\r",
+									" * FROM: https://gist.github.com/corbanb/db03150abbe899285d6a86cc480f674d\r",
+									" */\r",
+									"function base64url(source) {\r",
+									"\t// Encode in classical base64\r",
+									"\tencodedSource = CryptoJS.enc.Base64.stringify(source);\r",
+									"\r",
+									"\t// Remove padding equal characters\r",
+									"\tencodedSource = encodedSource.replace(/=+$/, '');\r",
+									"\r",
+									"\t// Replace characters according to base64url specifications\r",
+									"\tencodedSource = encodedSource.replace(/\\+/g, '-');\r",
+									"\tencodedSource = encodedSource.replace(/\\//g, '_');\r",
+									"\r",
+									"\treturn encodedSource;\r",
+									"}\r",
+									"\r",
+									"function addIATAndExp(request) {\r",
+									"\tvar iat = Math.floor(Date.now() / 1000) + 257;\r",
+									"\tdata.iat = iat;\r",
+									"\tdata.exp = iat + (60 * 30);\r",
+									"\treturn data;\r",
+									"}\r",
+									"\r",
+									"\r",
+									"var header = {\r",
+									"\t'typ': 'JWT',\r",
+									"\t'alg': 'HS256'\r",
+									"};\r",
+									"\r",
+									"var daiIchiID = Math.random().toString().slice(2,11) + Math.random().toString().slice(2,11);\r",
+									"\r",
+									"var data = {\r",
+									"  'sub': daiIchiID,\r",
+									"  'iss': 'dai-ichi-life.co.jp',\r",
+									"  'aud': 'api.neurotrack.com'\r",
+									"};\r",
+									"\r",
+									"data = addIATAndExp(data);\r",
+									"\r",
+									"var secret            = 'g3QRrv2QY6nhHf^TDJtT22gdJO^7lT2$7Paz4Ax&txc6o8tndR%rc71r4IWs&8Z7'; //TODO Environment Variable\r",
+									"var stringifiedHeader = CryptoJS.enc.Utf8.parse(JSON.stringify(header));\r",
+									"var encodedHeader     = base64url(stringifiedHeader);\r",
+									"var stringifiedData   = CryptoJS.enc.Utf8.parse(JSON.stringify(data)); // encode data\r",
+									"var encodedData       = base64url(stringifiedData);\r",
+									"var token             = encodedHeader + '.' + encodedData;\r",
+									"var signature         = CryptoJS.HmacSHA256(token, secret);\r",
+									"var signedToken       = token + '.' + base64url(signature);\r",
+									"\r",
+									"pm.globals.set('dai_ichi_id',daiIchiID);\r",
+									"pm.globals.set('user_email',daiIchiID+'@dai-ichi.io');\r",
+									"pm.globals.set('jwt_password', signedToken);\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "5c60aacb-0096-4bf5-a253-fd89e1799e6a",
+								"exec": [
+									"pm.test(\"Response must be valid and have a body\", () => {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Payload of token should match payload passed in.\", () => {",
+									"",
+									"    var jsonData  = pm.response.json();",
+									"    var token     = jsonData.token;",
+									"    var parts     = token.split('.');",
+									"    var payload   = JSON.parse(CryptoJS.enc.Base64.parse(parts[1]).toString(CryptoJS.enc.Utf8));",
+									"    var authHost  = pm.environment.get('AUTH_HOST');",
+									"",
+									"    pm.expect(payload['http://neurotrack.com/organization']).to.eql('dai-ichi');",
+									"    pm.expect(payload['http://neurotrack.com/role']).to.eql('customer');",
+									"    pm.expect(payload.iss).to.eql(`https://${authHost}/`);",
+									"    pm.expect(payload.aud).to.eql('https://api.neurotrack.io');",
+									"    pm.expect(payload.sub).to.eql(`auth0|${payload['http://neurotrack.com/uuid']}`);",
+									"    ",
+									"    pm.expect(payload.iat).to.not.be.null;",
+									"    pm.expect(payload.exp).to.not.be.null;",
+									"    pm.expect(payload.scope).to.not.be.null;",
+									"",
+									"    ",
+									"    pm.environment.set(\"access_token\", token);",
+									"})",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"jwt\": \"{{jwt_password}}\"\r\n}"
+						},
+						"url": {
+							"raw": "https://{{API_HOST}}/v1/tokens",
+							"protocol": "https",
+							"host": [
+								"{{API_HOST}}"
+							],
+							"path": [
+								"v1",
+								"tokens"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Battery",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "2b0347d8-90ca-4aa5-af66-5404cedaca7d",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "5c60aacb-0096-4bf5-a253-fd89e1799e6a",
+								"exec": [
+									"pm.test(\"Response must be valid and have a body\", () => {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Payload of token should match payload passed in.\", () => {",
+									"",
+									"    var jsonData         = pm.response.json();",
+									"    var battery_id       = jsonData.battery_instance_id;",
+									"    var calibration_step = jsonData.steps.find( step => step.type === 'calibration');",
+									"    var calibration_url  = calibration_step.config_url;",
+									"    ",
+									"    pm.environment.set(\"battery_id\", battery_id);",
+									"    pm.environment.set(\"calibration_url\", calibration_url);",
+									"    pm.environment.set(\"file_src\", \"C:\\\\Users\\\\matt_filion\\\\Downloads\\\\v1.mp4\");",
+									"})",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"battery_id\": 7}"
+						},
+						"url": {
+							"raw": "https://{{API_HOST}}/v0/battery/battery-instance/",
+							"protocol": "https",
+							"host": [
+								"{{API_HOST}}"
+							],
+							"path": [
+								"v0",
+								"battery",
+								"battery-instance",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Calibration",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "2b0347d8-90ca-4aa5-af66-5404cedaca7d",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "5c60aacb-0096-4bf5-a253-fd89e1799e6a",
+								"exec": [
+									"pm.test(\"Response must be valid and have a body\", () => {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Payload of token should match payload passed in.\", () => {",
+									"",
+									"    var jsonData       = pm.response.json();",
+									"    var video_blob_url = jsonData.upload_endpoint.video_blob;",
+									"    ",
+									"    pm.environment.set(\"video_blob_url\", video_blob_url);",
+									"})",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"video_container_type\": \"mp4\"}"
+						},
+						"url": {
+							"raw": "https://{{API_HOST}}/v0{{calibration_url}}",
+							"protocol": "https",
+							"host": [
+								"{{API_HOST}}"
+							],
+							"path": [
+								"v0{{calibration_url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upload",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "8cf7dd34-cc56-49fd-a05e-6e213165f413",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "eda33dfe-aaf3-42e4-83ad-934bbd051419",
+								"exec": [
+									"pm.test(\"201 Expected\", () => {",
+									"    pm.response.to.have.status(201);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "video/webm",
+								"type": "text"
+							},
+							{
+								"key": "Content-Disposition",
+								"value": "form-data; name=\"blob_file\"; filename=\"1\"\n",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "blob_file",
+									"type": "file",
+									"src": "{{file_src}}"
+								},
+								{
+									"key": "blob_number",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://{{API_HOST}}/v0{{video_blob_url}}",
+							"protocol": "https",
+							"host": [
+								"{{API_HOST}}"
+							],
+							"path": [
+								"v0{{video_blob_url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upload #2",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "8cf7dd34-cc56-49fd-a05e-6e213165f413",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "c6cf9b41-97c6-4b05-9b98-dda84a409971",
+								"exec": [
+									"pm.test(\"201 Expected\", () => {",
+									"    pm.response.to.have.status(201);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "video/webm",
+								"type": "text"
+							},
+							{
+								"key": "Content-Disposition",
+								"value": "form-data; name=\"blob_file\"; filename=\"2\"\n",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "blob_file",
+									"type": "file",
+									"src": "{{file_src}}"
+								},
+								{
+									"key": "blob_number",
+									"value": "2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://{{API_HOST}}/v0{{video_blob_url}}",
+							"protocol": "https",
+							"host": [
+								"{{API_HOST}}"
+							],
+							"path": [
+								"v0{{video_blob_url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upload #3",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "8cf7dd34-cc56-49fd-a05e-6e213165f413",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "18e5c321-5480-4d74-983f-86022ae9b3f3",
+								"exec": [
+									"pm.test(\"201 Expected\", () => {",
+									"    pm.response.to.have.status(201);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "video/webm",
+								"type": "text"
+							},
+							{
+								"key": "Content-Disposition",
+								"value": "form-data; name=\"blob_file\"; filename=\"3\"\n",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "blob_file",
+									"type": "file",
+									"src": "{{file_src}}"
+								},
+								{
+									"key": "blob_number",
+									"value": "3",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://{{API_HOST}}/v0{{video_blob_url}}",
+							"protocol": "https",
+							"host": [
+								"{{API_HOST}}"
+							],
+							"path": [
+								"v0{{video_blob_url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upload #4",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "8cf7dd34-cc56-49fd-a05e-6e213165f413",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "fceac700-c71d-431a-a173-9b46819524ee",
+								"exec": [
+									"pm.test(\"201 Expected\", () => {",
+									"    pm.response.to.have.status(201);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "video/webm",
+								"type": "text"
+							},
+							{
+								"key": "Content-Disposition",
+								"value": "form-data; name=\"blob_file\"; filename=\"4\"\n",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "blob_file",
+									"type": "file",
+									"src": "{{file_src}}"
+								},
+								{
+									"key": "blob_number",
+									"value": "4",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://{{API_HOST}}/v0{{video_blob_url}}",
+							"protocol": "https",
+							"host": [
+								"{{API_HOST}}"
+							],
+							"path": [
+								"v0{{video_blob_url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upload #5",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "8cf7dd34-cc56-49fd-a05e-6e213165f413",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "5562443d-e759-437f-b8b3-17e5c42f96f3",
+								"exec": [
+									"pm.test(\"201 Expected\", () => {",
+									"    pm.response.to.have.status(201);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "video/webm",
+								"type": "text"
+							},
+							{
+								"key": "Content-Disposition",
+								"value": "form-data; name=\"blob_file\"; filename=\"5\"\n",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "blob_file",
+									"type": "file",
+									"src": "{{file_src}}"
+								},
+								{
+									"key": "blob_number",
+									"value": "5",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://{{API_HOST}}/v0{{video_blob_url}}",
+							"protocol": "https",
+							"host": [
+								"{{API_HOST}}"
+							],
+							"path": [
+								"v0{{video_blob_url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upload #6",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "8cf7dd34-cc56-49fd-a05e-6e213165f413",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "0290ea32-e1b6-4b43-a6a6-367a61ca2864",
+								"exec": [
+									"pm.test(\"201 Expected\", () => {",
+									"    pm.response.to.have.status(201);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "video/webm",
+								"type": "text"
+							},
+							{
+								"key": "Content-Disposition",
+								"value": "form-data; name=\"blob_file\"; filename=\"6\"\n",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "blob_file",
+									"type": "file",
+									"src": "{{file_src}}"
+								},
+								{
+									"key": "blob_number",
+									"value": "6",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://{{API_HOST}}/v0{{video_blob_url}}",
+							"protocol": "https",
+							"host": [
+								"{{API_HOST}}"
+							],
+							"path": [
+								"v0{{video_blob_url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upload #7",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "8cf7dd34-cc56-49fd-a05e-6e213165f413",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "92169db2-968e-4e27-80af-4ab7727d948f",
+								"exec": [
+									"pm.test(\"201 Expected\", () => {",
+									"    pm.response.to.have.status(201);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "video/webm",
+								"type": "text"
+							},
+							{
+								"key": "Content-Disposition",
+								"value": "form-data; name=\"blob_file\"; filename=\"7\"\n",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "blob_file",
+									"type": "file",
+									"src": "{{file_src}}"
+								},
+								{
+									"key": "blob_number",
+									"value": "7",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://{{API_HOST}}/v0{{video_blob_url}}",
+							"protocol": "https",
+							"host": [
+								"{{API_HOST}}"
+							],
+							"path": [
+								"v0{{video_blob_url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upload #8",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "8cf7dd34-cc56-49fd-a05e-6e213165f413",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "8c125ed3-374e-4d24-845d-6ea7239feb13",
+								"exec": [
+									"pm.test(\"201 Expected\", () => {",
+									"    pm.response.to.have.status(201);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "video/webm",
+								"type": "text"
+							},
+							{
+								"key": "Content-Disposition",
+								"value": "form-data; name=\"blob_file\"; filename=\"8\"\n",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "blob_file",
+									"type": "file",
+									"src": "{{file_src}}"
+								},
+								{
+									"key": "blob_number",
+									"value": "8",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://{{API_HOST}}/v0{{video_blob_url}}",
+							"protocol": "https",
+							"host": [
+								"{{API_HOST}}"
+							],
+							"path": [
+								"v0{{video_blob_url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upload #9",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "8cf7dd34-cc56-49fd-a05e-6e213165f413",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "80eab659-2a0e-4d7b-a967-4c43af80df64",
+								"exec": [
+									"pm.test(\"201 Expected\", () => {",
+									"    pm.response.to.have.status(201);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{access_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "video/webm"
+							},
+							{
+								"key": "Content-Disposition",
+								"type": "text",
+								"value": "form-data; name=\"blob_file\"; filename=\"9\"\n",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "blob_file",
+									"type": "file",
+									"src": "{{file_src}}"
+								},
+								{
+									"key": "blob_number",
+									"value": "9",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://{{API_HOST}}/v0{{video_blob_url}}",
+							"protocol": "https",
+							"host": [
+								"{{API_HOST}}"
+							],
+							"path": [
+								"v0{{video_blob_url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upload #10",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "8cf7dd34-cc56-49fd-a05e-6e213165f413",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "1f46cd0b-eb91-4d57-8fd3-fb425119deb2",
+								"exec": [
+									"pm.test(\"201 Expected\", () => {",
+									"    pm.response.to.have.status(201);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "video/webm",
+								"type": "text"
+							},
+							{
+								"key": "Content-Disposition",
+								"value": "form-data; name=\"blob_file\"; filename=\"10\"\n",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "blob_file",
+									"type": "file",
+									"src": "{{file_src}}"
+								},
+								{
+									"key": "blob_number",
+									"value": "10",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://{{API_HOST}}/v0{{video_blob_url}}",
+							"protocol": "https",
+							"host": [
+								"{{API_HOST}}"
+							],
+							"path": [
+								"v0{{video_blob_url}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

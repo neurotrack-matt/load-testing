@@ -1,0 +1,25 @@
+{
+    "id": "683ad527-9279-f62f-ff8d-663df9026ca8",
+    "name": "Runner Globals",
+    "values": [
+        {
+            "key": "file_src",
+            "value": "./data/v1.mp4",
+            "enabled": true,
+            "type": "file"
+        },
+        {
+            "key": "calibration_id",
+            "value": "7270",
+            "enabled": true,
+            "type": "string"
+        },
+        {
+            "key": "access_token",
+            "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlF6WTJRVEV3TnpFeU1EUTBRa0V3TmpBeU1UazFOME0zTVVRd05rUTBNVGxGT0VJeE5rWkVOQSJ9.eyJodHRwOi8vbmV1cm90cmFjay5jb20vb3JnYW5pemF0aW9uIjoiZGFpLWljaGkiLCJodHRwOi8vbmV1cm90cmFjay5jb20vcm9sZSI6ImN1c3RvbWVyIiwiaHR0cDovL25ldXJvdHJhY2suY29tL3V1aWQiOiJiY2I0N2I5ZS1mMjBmLTQ1ODUtOTljNS1iMzgzZDY3NzllNTQiLCJpc3MiOiJodHRwczovL2F1dGgucWEtbmV1cm90cmFjay5pby8iLCJzdWIiOiJhdXRoMHxiY2I0N2I5ZS1mMjBmLTQ1ODUtOTljNS1iMzgzZDY3NzllNTQiLCJhdWQiOiJodHRwczovL2FwaS5uZXVyb3RyYWNrLmlvIiwiaWF0IjoxNTQ2MDI2Nzg0LCJleHAiOjE1NDYxMTMxODQsImF6cCI6Ikk3bWR6Z2toNlhYSHR6Y3ZBU2NLUkk2TEk5OGZwZ2dsIiwic2NvcGUiOiJ1c2VyczpyZWFkIHVzZXJzOnVwZGF0ZSB1c2VyczpjcmVhdGUiLCJndHkiOiJwYXNzd29yZCJ9.H8rzfoWTVFvmU8RREIuey67OyZ1FkY_WT9nZnMp-_mzbbVa859yQEjIcWNYMPmEhmoQ-H1CKX0a5NUcODQ_piUdyxO9Jv1W7tP7HVtYr2LWrWb7Wo45LQA4fFeEt8DRzqQJ9hpnA40Vpra5epvIrTDuHW7wjXOmTd4Aoc9BWpHa5ZjYuFOMVi2LGwRDjqwVfhi98Ce-BVV6Fx-s1vfh_TLeDJ6bpbblJMiMBxtpHHt05OxxY--5Q0EuQkxG_BgaIH51o5fz8LOTqGC6zo7WX3ScpZsC6rnsZSn_rEnJJnIqCL3rL6YL62LbDPSn9oRhPNHMphaYQcbzNfOUYLFWEuQ",
+            "enabled": true,
+            "type": "string"
+        }
+    ],
+    "_postman_variable_scope": "globals"
+}
